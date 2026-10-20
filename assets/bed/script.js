@@ -24,9 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const pct = (w) => Math.round((w.occ / w.cap) * 100);
 
   const state = { cat: "all", sort: null, dir: 1 };
-  const open = new Set();
   const rowsEl = $("#rows"), emptyEl = $("#empty"), countEl = $("#count");
-  const CHEV = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 
   /* ---------- clock ---------- */
   const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -49,22 +47,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------- rows ---------- */
-  const blocksHTML = (w) => Array.from({ length: w.cap }, (_, i) => `<i class="${i < w.occ ? "" : "free"}" style="--b:${i}" title="Tempat tidur ${i + 1}: ${i < w.occ ? "terisi" : "tersedia"}"></i>`).join("");
-  const freeHTML = (w) => (free(w) === 0 ? '<span class="full">Penuh</span>' : `<span class="r-free">${free(w)}</span>`);
+  const freeHTML = (w) => `<span class="r-free${free(w) === 0 ? " zero" : ""}">${free(w)}</span>`;
 
   function rowHTML(w, k) {
-    return `<div class="row in ${open.has(w.id) ? "open" : ""}" data-id="${w.id}" style="--c:${CATS[w.cat].color};--k:${k}">
-      <button class="row-main grid" type="button" aria-expanded="${open.has(w.id)}">
-        <span class="r-name"><i></i>${w.name}${CHEV}</span>
+    return `<div class="row in" data-id="${w.id}" style="--c:${CATS[w.cat].color};--k:${k}">
+      <div class="row-main grid">
+        <span class="r-name"><i></i>${w.name}</span>
         <span class="r-num r-cap">${w.cap}</span>
         <span class="r-num r-occ">${w.occ}</span>
         <span class="r-free-cell">${freeHTML(w)}</span>
         <span class="meter"><span class="bar"><i></i></span><span class="pct">${pct(w)}%</span></span>
-      </button>
-      <div class="detail"><div>
-        <div class="blocks">${blocksHTML(w)}</div>
-        <div class="key"><span><i></i>Terisi</span><span><i class="free"></i>Tersedia</span></div>
-      </div></div>
+      </div>
     </div>`;
   }
 
@@ -99,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
     row.querySelector(".r-free-cell").innerHTML = freeHTML(w);
     row.querySelector(".bar i").style.width = pct(w) + "%";
     row.querySelector(".pct").textContent = pct(w) + "%";
-    row.querySelector(".blocks").innerHTML = blocksHTML(w);
     row.classList.remove("flash"); void row.offsetWidth; row.classList.add("flash");
   }
 
@@ -124,14 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------- events ---------- */
-  rowsEl.addEventListener("click", (e) => {
-    const main = e.target.closest(".row-main");
-    if (!main) return;
-    const row = main.parentElement, id = row.dataset.id;
-    const isOpen = row.classList.toggle("open");
-    main.setAttribute("aria-expanded", isOpen);
-    isOpen ? open.add(id) : open.delete(id);
-  });
   document.querySelectorAll(".head button").forEach((b) =>
     b.addEventListener("click", () => {
       const k = b.dataset.sort;

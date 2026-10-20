@@ -45,14 +45,16 @@
       <p class="count" id="count"></p>
     </div>
 
-    <div class="grid head" role="row">
-      <button type="button" data-sort="name">Nama ruangan<i></i></button>
-      <button type="button" data-sort="cap" class="c-cap">Kapasitas<i></i></button>
-      <button type="button" data-sort="occ" class="c-occ">Terisi<i></i></button>
-      <button type="button" data-sort="free">Tersedia<i></i></button>
-      <button type="button" data-sort="pct">Keterisian<i></i></button>
-    </div>
-    <div id="rows"></div>
+    <div class="scroll"><div class="tbl">
+      <div class="grid head" role="row">
+        <button type="button" data-sort="name">Nama ruangan<i></i></button>
+        <button type="button" data-sort="cap" class="n">Kapasitas<i></i></button>
+        <button type="button" data-sort="occ" class="n">Terisi<i></i></button>
+        <button type="button" data-sort="free" class="n">Tersedia<i></i></button>
+        <button type="button" data-sort="pct">Keterisian<i></i></button>
+      </div>
+      <div id="rows"></div>
+    </div></div>
 
     <div class="empty" id="empty" hidden>
       <p>Tidak ada ruangan pada kategori ini.</p>
