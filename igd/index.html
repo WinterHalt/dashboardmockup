@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospital Command Center · RSUP Dr M Djamil Padang</title>
+<script src="../assets/igd/script.js"></script>
+
+<link rel="stylesheet" href="../assets/igd/style.css">
+</head>
+<body>
+<main class="board">
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+      <div>
+        <h1>Hospital Command Center</h1>
+        <p>RSUP Dr M Djamil Padang</p>
+      </div>
+    </div>
+    <div class="clock">
+      <b id="time">--:--:--</b>
+      <span><i class="live" aria-hidden="true"></i><em id="date">-</em></span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- IGD -->
+    <section class="card c-igd">
+      <h2>Pasien IGD</h2>
+      <div class="triage">
+        <div class="tile t-red"><span>Triage Merah</span><b class="num">6</b></div>
+        <div class="tile t-amber"><span>Triage Kuning</span><b class="num">14</b></div>
+        <div class="tile t-green"><span>Triage Hijau</span><b class="num">32</b></div>
+      </div>
+      <dl class="lines">
+        <div><dt>Total kunjungan</dt><dd class="num">87</dd></div>
+        <div><dt>Rerata respon time</dt><dd>00:14:20</dd></div>
+        <div><dt>Rerata waktu tunggu</dt><dd>02:05:40</dd></div>
+      </dl>
+      <a class="shortcut" href="/igd/patient.html"><span>Daftar Pasien Instalasi Gawat Darurat</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </section>
+
+    <!-- Bed -->
+    <section class="card c-bed">
+      <h2>Ketersediaan Kamar</h2>
+      <div class="bed" data-free="2" data-total="10" data-tone="red">
+        <div class="bed-head"><span>ICU</span><span class="bed-free"><b class="num">2</b><small>dari 10</small></span></div>
+        <div class="seg"></div>
+      </div>
+      <div class="bed" data-free="5" data-total="40" data-tone="amber">
+        <div class="bed-head"><span>Kelas 1</span><span class="bed-free"><b class="num">5</b><small>dari 40</small></span></div>
+        <div class="seg"></div>
+      </div>
+      <div class="bed" data-free="1" data-total="5" data-tone="red">
+        <div class="bed-head"><span>VVIP</span><span class="bed-free"><b class="num">1</b><small>dari 5</small></span></div>
+        <div class="seg"></div>
+      </div>
+      <a class="shortcut" href="/bed/index.html"><span>Ketersediaan Tempat Tidur</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </section>
+
+    <!-- OK -->
+    <section class="card c-ok">
+      <h2>Kamar Operasi</h2>
+      <div class="pipe">
+        <div class="step"><i class="dot" style="background:var(--blue-bg);color:var(--blue)">1</i><span>Bersiap</span><b class="b"><span class="num">8</span><small>orang</small></b></div>
+        <div class="step is-live"><i class="dot" style="background:var(--amber-bg);color:#c98400">2</i><span>Sedang berlangsung</span><b class="a"><span class="num">8</span><small>orang</small></b></div>
+        <div class="step"><i class="dot" style="background:var(--green-bg);color:var(--green)">3</i><span>Sudah selesai</span><b class="g"><span class="num">4</span><small>orang</small></b></div>
+      </div>
+      <a class="shortcut" href="#"><span>Dashboard Operasi</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </section>
+
+    <!-- Rawatan -->
+    <section class="card c-rawat">
+      <h2>Pasien Rawatan</h2>
+      <div class="quad">
+        <div><span>Total rawat inap</span><b class="num">142</b></div>
+        <div><span>Rawat inap saat ini</span><b class="num">147</b></div>
+        <div class="q-blue"><span>Pasien baru</span><b class="num">23</b></div>
+        <div class="q-green"><span>Pasien pulang</span><b class="num">18</b></div>
+      </div>
+    </section>
+
+    <!-- Grafik -->
+    <section class="card c-chart">
+      <h2>Grafik</h2>
+      <div class="charts">
+        <button class="chart-card" type="button" data-chart="arrival" aria-label="Perbesar grafik kedatangan pasien ranap per jam">
+          <span class="chart-label">Kedatangan ranap / jam</span>
+          <svg class="spark"></svg>
+        </button>
+        <button class="chart-card" type="button" data-chart="triage" aria-label="Perbesar grafik triase merah per jam">
+          <span class="chart-label">Triase merah / jam</span>
+          <svg class="spark"></svg>
+        </button>
+        <button class="chart-card" type="button" data-chart="respon" aria-label="Perbesar grafik respon time">
+          <span class="chart-label">Respon time (menit)</span>
+          <svg class="spark"></svg>
+        </button>
+        <button class="chart-card" type="button" data-chart="wait" aria-label="Perbesar grafik waktu tunggu">
+          <span class="chart-label">Waktu tunggu (menit)</span>
+          <svg class="spark"></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Logistik -->
+    <section class="card c-log">
+      <h2>Logistik</h2>
+      <div class="blood">
+        <div class="bt ok" style="--lvl:.6"><i></i><span>Gol. A</span><b class="num">18</b><em>Aman</em></div>
+        <div class="bt warn" style="--lvl:.4"><i></i><span>Gol. B</span><b class="num">12</b><em>Menipis</em></div>
+        <div class="bt ok" style="--lvl:.23"><i></i><span>Gol. AB</span><b class="num">7</b><em>Aman</em></div>
+        <div class="bt crit" style="--lvl:.07"><i></i><span>Gol. O</span><b class="num">2</b><em>Kritis</em></div>
+      </div>
+      <div class="oxy">
+        <svg viewBox="0 0 44 44" width="56" height="56" aria-hidden="true">
+          <circle cx="22" cy="22" r="18" fill="none" stroke="var(--track)" stroke-width="5"/>
+          <circle id="oxy-ring" cx="22" cy="22" r="18" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 22 22)"/>
+        </svg>
+        <div><span>Oksigen sentral</span><b><span class="num">85</span>%</b></div>
+        <em class="pill ok">Aman</em>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h3 id="modal-title"></h3>
+      <button class="modal-close" type="button" data-close aria-label="Tutup">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal-stats" id="modal-stats"></div>
+    <div class="big-wrap">
+      <svg id="big" role="img"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ketersediaan Tempat Tidur · RSUP Dr M Djamil Padang</title>
+<script src="../assets/bed/script.js"></script>
+
+<link rel="stylesheet" href="../assets/bed/style.css">
+</head>
+<body>
+<main class="board">
+  <header class="top">
+    <div class="brand">
+      <a class="back" href="../igd/index.html" aria-label="Kembali ke dashboard">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </a>
+      <div>
+        <h1>Ketersediaan Tempat Tidur</h1>
+        <p>RSUP Dr. M. Djamil Padang</p>
+      </div>
+    </div>
+    <div class="right">
+      <div class="clock">
+        <b id="time">--:--:--</b>
+        <span><i class="live" id="live" aria-hidden="true"></i><em id="date">-</em></span>
+      </div>
+      <button class="theme" id="theme" type="button" aria-label="Ganti tema terang atau gelap">
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Ringkasan">
+    <div class="stat"><b class="num" data-key="cap">0</b><span>Total tempat tidur</span></div>
+    <div class="stat"><b class="num" data-key="occ">0</b><span>Terisi</span></div>
+    <div class="stat s-green"><b class="num" data-key="free">0</b><span>Tersedia</span></div>
+    <div class="stat s-amber"><b class="num" data-key="pct">0</b><span>Keterisian</span></div>
+  </section>
+
+  <section class="card list-card">
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Filter jenis ruangan"></div>
+      <p class="count" id="count"></p>
+    </div>
+
+    <div class="grid head" role="row">
+      <button type="button" data-sort="name">Nama ruangan<i></i></button>
+      <button type="button" data-sort="cap" class="c-cap">Kapasitas<i></i></button>
+      <button type="button" data-sort="occ" class="c-occ">Terisi<i></i></button>
+      <button type="button" data-sort="free">Tersedia<i></i></button>
+      <button type="button" data-sort="pct">Keterisian<i></i></button>
+    </div>
+    <div id="rows"></div>
+
+    <div class="empty" id="empty" hidden>
+      <p>Tidak ada ruangan pada kategori ini.</p>
+      <button type="button" id="reset">Tampilkan semua</button>
+    </div>
+  </section>
+
+  <footer class="note">Data agregat tanpa identitas pasien</footer>
+</main>
+</body>
+</html>
