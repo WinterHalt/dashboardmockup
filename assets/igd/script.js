@@ -118,6 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => document.querySelectorAll(".card").forEach((c) => c.classList.add("settled")), 1300);
   }));
 
+  /* ---------- tautan sementara: halaman belum ada, jangan loncat ke atas ---------- */
+  document.querySelectorAll('a[href="#"]').forEach((a) =>
+    a.addEventListener("click", (e) => e.preventDefault()));
+
   /* ---------- modal ---------- */
   const modal = document.getElementById("modal");
   const box = modal.querySelector(".modal-box");
