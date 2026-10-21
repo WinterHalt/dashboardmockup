@@ -53,11 +53,18 @@ tr.in{animation:rowIn .45s var(--ease) both;animation-delay:calc(var(--k)*45ms)}
 tr.flash td{animation:flash 1.6s ease}@keyframes flash{0%,50%{background:color-mix(in srgb,var(--c) 14%,var(--card))}}
 .ok{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}.ok i{width:11px;height:11px;border-radius:50%;background:var(--c);flex:none}
 .ini{font-weight:700;font-size:16px}.sx{text-align:center}.age{text-align:right;font-variant-numeric:tabular-nums}
-.tm{min-width:190px}.tm b{font-weight:600;font-variant-numeric:tabular-nums}
+.tm{white-space:nowrap}.tm b{font-weight:600;font-variant-numeric:tabular-nums}
+[data-mode="lite"] .tm{min-width:190px}
+.tm b{position:relative;cursor:default;outline:none}
+.tip{position:absolute;left:0;bottom:calc(100% + 9px);z-index:5;display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:9px;background:var(--ink);color:var(--card);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:var(--shadow);opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .25s var(--ease)}
+.tip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.tip::after{content:"";position:absolute;left:16px;bottom:-4px;width:8px;height:8px;background:var(--ink);transform:rotate(45deg)}
+.tm b:hover .tip,.tm b:focus-visible .tip{opacity:1;transform:none}
 .meter{display:flex;align-items:center;gap:10px;margin-top:7px}
 .bar{flex:1;height:7px;border-radius:7px;background:var(--track);overflow:hidden}
 .bar i{display:block;height:100%;width:0;border-radius:7px;background:var(--c);transition:width .9s var(--ease)}
 .left{font-size:12.5px;font-weight:600;color:var(--c);white-space:nowrap;min-width:78px;text-align:right}
+body:not([data-mode="lite"]) .rooms{display:none}
 .dest{display:inline-block;font-weight:600;font-size:13px;padding:4px 12px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
 .empty{text-align:center;padding:36px 0 30px}.empty p{color:var(--mute);margin-bottom:12px}
 .empty button{all:unset;cursor:pointer;padding:9px 16px;border-radius:99px;background:var(--soft);color:var(--blue);font-weight:600;font-size:14px}
