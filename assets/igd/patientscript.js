@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
      Waktu terdaftar dihitung dari jam sekarang, sehingga angka selalu terlihat realistis. */
   const base = Math.floor(Date.now() / 60000) * 60000;
   const PATIENTS = [
-    { id: 1, name: "S*****I",    rm: "01320987", doctor: "dr. Rahmat, Sp.B",              off: 216, disp: "Rawat Inap", ward: 84 },
-    { id: 2, name: "R*****A",    rm: "01321221", doctor: "dr. Hendri, Sp.OG",             off: 193, disp: "-",          ward: null },
+    { id: 1, name: "S*****I",    rm: "01320987", doctor: "dr. Rahmat, Sp.B",              off: 276, disp: "Rawat Inap", ward: 84 },
+    { id: 2, name: "R*****A",    rm: "01321221", doctor: "dr. Hendri, Sp.OG",             off: 253, disp: "-",          ward: null },
     { id: 3, name: "I********A", rm: "01321305", doctor: "dr. Firman, Sp.PD",             off: 167, disp: "Rawat Inap", ward: 85, accepted: true },
     { id: 4, name: "M*****N",    rm: "01321377", doctor: "dr. Firman, Sp.PD",             off: 131, disp: "Rawat Inap", ward: 149 },
     { id: 5, name: "D*****Y",    rm: "01321399", doctor: "dr. Rahmat, Sp.B",              off: 76,  disp: "Pulang",     ward: null },
@@ -25,15 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- perhitungan ---------- */
   const respMin = (p, now) => Math.max(0, Math.floor((now - p.registered) / 60000));
+  const LIMIT = 240;   // batas response time: 4 jam (menit)
   const statusOf = (p, now) => {
     if (p.accepted) return "accepted";
     const m = respMin(p, now);
-    return m >= 180 ? "delayed" : m >= 120 ? "warning" : "normal";
+    return m >= LIMIT ? "delayed" : m >= LIMIT / 2 ? "warning" : "normal";
   };
   const LABEL = { normal: "NORMAL", warning: "WARNING", delayed: "DELAYED", accepted: "ACCEPTED" };
   const fmtResp = (m) => `${Math.floor(m / 60)} Jam ${pad(m % 60)} Menit`;
   const fmtOver = (m) => (m >= 60 ? `${Math.floor(m / 60)} Jam ${pad(m % 60)} Menit` : `${m} Menit`);
-  const LIMIT = 180;
   const group = (s) => (s === "accepted" ? "normal" : s);
 
   /* ---------- state ---------- */
@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const m = respMin(p, now), s = statusOf(p, now);
       tr.className = `s-${s}` + (tr.classList.contains("in") ? " in" : "") + "";
       tr.querySelector(".resp b").textContent = fmtResp(m);
-      tr.querySelector(".resp").title = s === "delayed" ? `Melewati batas 3 jam (+${fmtOver(m - LIMIT)})` : "";
-      tr.querySelector(".bar i").style.width = Math.min(100, (m / 180) * 100) + "%";
+      tr.querySelector(".resp").title = s === "delayed" ? `Melewati batas 4 jam (+${fmtOver(m - LIMIT)})` : "";
+      tr.querySelector(".bar i").style.width = Math.min(100, (m / LIMIT) * 100) + "%";
       const pill = tr.querySelector(".pill");
       pill.textContent = LABEL[s];
       pill.className = "pill " + s;
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ---------- peringatan > 3 jam ---------- */
+  /* ---------- peringatan >= 4 jam ---------- */
   const toasts = $("#toasts"), BASE_TITLE = document.title;
   let known = null;
   function toast(text) {
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.title = (late.length ? `(${late.length}) ` : "") + BASE_TITLE;
     document.querySelector(".s-red").classList.toggle("alert-on", late.length > 0);
     const ids = new Set(late.map((p) => p.id));
-    if (known) late.filter((p) => !known.has(p.id)).forEach((p) => toast(`${p.name} melewati batas respon 3 jam`));
+    if (known) late.filter((p) => !known.has(p.id)).forEach((p) => toast(`${p.name} melewati batas response time 4 jam`));
     known = ids;
   }
 

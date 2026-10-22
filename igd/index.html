@@ -10,6 +10,7 @@
 </head>
 <body>
 <main class="board">
+
   <header class="top">
     <div class="brand">
       <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
@@ -24,117 +25,57 @@
     </div>
   </header>
 
+  <!-- BARIS 1: kartu angka -->
+  <section class="kpis" aria-label="Ringkasan">
+    <div class="card kpi"><span>Total kunjungan</span><b class="num">87</b></div>
+    <div class="card kpi k-green"><span>Total pulang</span><b class="num">18</b></div>
+    <div class="card kpi k-blue"><span>Total rawat inap</span><b class="num">142</b></div>
+    <a class="card kpi k-late" href="#"><span>Lebih dari 4 jam</span><b class="num">2</b></a>
+    <div class="card kpi k-time"><span>Rata-rata response time</span><b class="tabular">00:14:20</b></div>
+  </section>
+
+  <!-- BARIS 2: triase, bed IGD, bed rawat inap -->
   <div class="grid">
-    <!-- IGD -->
-    <section class="card c-igd">
-      <h2>Pasien IGD</h2>
+    <section class="card c-triase">
+      <h2>Triase medis</h2>
       <div class="triage">
-        <a class="tile t-surgikal" href="#" data-triage="surgikal"><span>Surgikal</span><b class="num">14</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
-        <a class="tile t-resusitasi" href="#" data-triage="resusitasi"><span>Resusitasi</span><b class="num">3</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
-        <a class="tile t-anak" href="#" data-triage="anak"><span>Anak</span><b class="num">11</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
-        <a class="tile t-medikal" href="#" data-triage="medikal"><span>Medikal</span><b class="num">22</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
-        <a class="tile t-obgyn" href="#" data-triage="obgyn"><span>Obgyn</span><b class="num">6</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
-        <a class="tile t-forensik" href="#" data-triage="forensik"><span>Forensik</span><b class="num">2</b><svg class="go" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+        <a class="tile t-surgikal" href="#"><span>Surgikal</span><b class="num">10</b></a>
+        <a class="tile t-resusitasi" href="#"><span>Resusitasi</span><b class="num">3</b></a>
+        <a class="tile t-anak" href="#"><span>Anak</span><b class="num">5</b></a>
+        <a class="tile t-medikal" href="#"><span>Medikal</span><b class="num">9</b></a>
+        <a class="tile t-obgyn" href="#"><span>Obgyn</span><b class="num">4</b></a>
+        <a class="tile t-forensik is-zero" href="#"><span>Forensik</span><b class="num">0</b></a>
       </div>
-      <dl class="lines">
-        <div><dt>Total kunjungan</dt><dd class="num">87</dd></div>
-        <div><dt>Rerata respon time</dt><dd>00:14:20</dd></div>
-        <div><dt>Rerata waktu tunggu</dt><dd>02:05:40</dd></div>
-      </dl>
       <a class="shortcut" href="patient.html"><span>Daftar Pasien Instalasi Gawat Darurat</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </section>
 
-    <!-- Bed -->
     <section class="card c-bed">
-      <h2>Ketersediaan Kamar</h2>
-      <div class="bed" data-free="2" data-total="10" data-tone="red">
-        <div class="bed-head"><span>ICU</span><span class="bed-free"><b class="num">2</b><small>dari 10</small></span></div>
-        <div class="seg"></div>
-      </div>
-      <div class="bed" data-free="5" data-total="40" data-tone="amber">
-        <div class="bed-head"><span>Kelas 1</span><span class="bed-free"><b class="num">5</b><small>dari 40</small></span></div>
-        <div class="seg"></div>
-      </div>
-      <div class="bed" data-free="1" data-total="5" data-tone="red">
-        <div class="bed-head"><span>VVIP</span><span class="bed-free"><b class="num">1</b><small>dari 5</small></span></div>
-        <div class="seg"></div>
-      </div>
+      <h2>Ketersediaan bed IGD</h2>
+      <div id="bed-igd"></div>
+    </section>
+
+    <section class="card c-bed">
+      <h2>Ketersediaan bed rawat inap</h2>
+      <div id="bed-ranap"></div>
       <a class="shortcut" href="../bed/index.html"><span>Ketersediaan Tempat Tidur</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </section>
-
-    <div class="c-side">
-      <!-- OK -->
-      <section class="card c-ok">
-        <h2>Kamar Operasi</h2>
-        <div class="pipe">
-          <div class="step"><i class="dot" style="background:var(--blue-bg);color:var(--blue)">1</i><span>Bersiap</span><b class="b"><span class="num">8</span><small>orang</small></b></div>
-          <div class="step is-live"><i class="dot" style="background:var(--amber-bg);color:#c98400">2</i><span>Sedang berlangsung</span><b class="a"><span class="num">8</span><small>orang</small></b></div>
-          <div class="step"><i class="dot" style="background:var(--green-bg);color:var(--green)">3</i><span>Sudah selesai</span><b class="g"><span class="num">4</span><small>orang</small></b></div>
-        </div>
-        <a class="shortcut" href="../operasi/index.html"><span>Dashboard Operasi</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </section>
-
-      <!-- Respon time >= 4 jam -->
-      <a class="card c-late" href="#" data-page="respon-4jam" aria-label="Pasien dengan respon time 4 jam atau lebih">
-        <span class="late-label">Respon time ≥ 4 jam</span>
-        <span class="late-main"><b class="num">5</b><small>pasien</small></span>
-        <span class="late-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-    </div>
-
-    <!-- Rawatan -->
-    <section class="card c-rawat">
-      <h2>Pasien Rawatan</h2>
-      <div class="quad">
-        <div><span>Total rawat inap</span><b class="num">142</b></div>
-        <div><span>Rawat inap saat ini</span><b class="num">147</b></div>
-        <div class="q-blue"><span>Pasien baru</span><b class="num">23</b></div>
-        <div class="q-green"><span>Pasien pulang</span><b class="num">18</b></div>
-      </div>
-    </section>
-
-    <!-- Grafik -->
-    <section class="card c-chart">
-      <h2>Grafik</h2>
-      <div class="charts">
-        <button class="chart-card" type="button" data-chart="arrival" aria-label="Perbesar grafik kedatangan pasien ranap per jam">
-          <span class="chart-label">Kedatangan ranap / jam</span>
-          <svg class="spark"></svg>
-        </button>
-        <button class="chart-card" type="button" data-chart="triage" aria-label="Perbesar grafik triase merah per jam">
-          <span class="chart-label">Triase merah / jam</span>
-          <svg class="spark"></svg>
-        </button>
-        <button class="chart-card" type="button" data-chart="respon" aria-label="Perbesar grafik respon time">
-          <span class="chart-label">Respon time (menit)</span>
-          <svg class="spark"></svg>
-        </button>
-        <button class="chart-card" type="button" data-chart="wait" aria-label="Perbesar grafik waktu tunggu">
-          <span class="chart-label">Waktu tunggu (menit)</span>
-          <svg class="spark"></svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- Logistik -->
-    <section class="card c-log">
-      <h2>Logistik</h2>
-      <div class="blood">
-        <div class="bt ok" style="--lvl:.6"><i></i><span>Gol. A</span><b class="num">18</b><em>Aman</em></div>
-        <div class="bt warn" style="--lvl:.4"><i></i><span>Gol. B</span><b class="num">12</b><em>Menipis</em></div>
-        <div class="bt ok" style="--lvl:.23"><i></i><span>Gol. AB</span><b class="num">7</b><em>Aman</em></div>
-        <div class="bt crit" style="--lvl:.07"><i></i><span>Gol. O</span><b class="num">2</b><em>Kritis</em></div>
-      </div>
-      <div class="oxy">
-        <svg viewBox="0 0 44 44" width="56" height="56" aria-hidden="true">
-          <circle cx="22" cy="22" r="18" fill="none" stroke="var(--track)" stroke-width="5"/>
-          <circle id="oxy-ring" cx="22" cy="22" r="18" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 22 22)"/>
-        </svg>
-        <div><span>Oksigen sentral</span><b><span class="num">85</span>%</b></div>
-        <em class="pill ok">Aman</em>
-      </div>
-    </section>
   </div>
+
+  <!-- BARIS 3: grafik (klik untuk memperbesar) -->
+  <section class="charts" aria-label="Grafik">
+    <button class="card chart-card" type="button" data-chart="arrival" aria-label="Perbesar grafik kedatangan pasien ranap per jam">
+      <span class="chart-label">Kedatangan ranap / jam</span><svg class="spark"></svg>
+    </button>
+    <button class="card chart-card" type="button" data-chart="triage" aria-label="Perbesar grafik triase merah per jam">
+      <span class="chart-label">Triase merah / jam</span><svg class="spark"></svg>
+    </button>
+    <button class="card chart-card" type="button" data-chart="respon" aria-label="Perbesar grafik response time">
+      <span class="chart-label">Response time (menit)</span><svg class="spark"></svg>
+    </button>
+    <button class="card chart-card" type="button" data-chart="visit" aria-label="Perbesar grafik kunjungan per jam">
+      <span class="chart-label">Kunjungan / jam</span><svg class="spark"></svg>
+    </button>
+  </section>
 </main>
 
 <div class="modal" id="modal" hidden>

@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const CHARTS = {
     arrival: { title: "Kedatangan pasien ranap / jam", color: "#2f6fed", soft: "#e8f0fe", data: [3, 4, 4, 6, 7, 6, 8, 9, 8, 10, 9, 11] },
     triage:  { title: "Triase merah / jam",            color: "#e5484d", soft: "#fdecec", data: [1, 2, 1, 2, 3, 2, 4, 3, 5, 3, 4, 3] },
-    respon:  { title: "Respon time (menit)",           color: "#1fa971", soft: "#e4f6ee", data: [16, 14, 15, 13, 17, 15, 14, 16, 13, 15, 14, 14], floor: 10 },
-    wait:    { title: "Waktu tunggu (menit)",          color: "#f2a20c", soft: "#fff4dc", data: [140, 128, 135, 118, 130, 122, 126, 115, 128, 120, 124, 125], floor: 100 },
+    respon:  { title: "Response time (menit)",          color: "#1fa971", soft: "#e4f6ee", data: [16, 14, 15, 13, 17, 15, 14, 16, 13, 15, 14, 14], floor: 10 },
+    visit:   { title: "Kunjungan / jam",             color: "#f2a20c", soft: "#fff4dc", data: [3, 4, 5, 6, 8, 7, 9, 10, 8, 9, 7, 11] },
   };
 
   const el = (name, attrs = {}) => {
@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cards = [...document.querySelectorAll(".chart-card")];
   const redrawSparks = () => cards.forEach((c) => drawSpark(c, c.dataset.chart));
   new ResizeObserver(redrawSparks).observe(document.querySelector(".charts"));
+  redrawSparks();
   cards.forEach((c) => c.addEventListener("click", () => openModal(c.dataset.chart, c)));
 
   /* ---------- clock ---------- */
@@ -87,16 +88,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   tick(); setInterval(tick, 1000);
 
-  /* ---------- build bed segments ---------- */
-  document.querySelectorAll(".bed").forEach((b) => {
-    const free = +b.dataset.free, total = +b.dataset.total, seg = b.querySelector(".seg");
-    for (let i = 0; i < total; i++) {
-      const s = document.createElement("i");
-      s.className = i < total - free ? "on" : "free";
-      s.style.setProperty("--k", i);
-      seg.append(s);
-    }
-  });
+  /* ---------- bed: data dummy -> segmen (gaya lama) ---------- */
+  const IGD_ROOMS = [
+    { name: "R. Resusitasi", cap: 4,  occ: 3 },
+    { name: "Medikal",       cap: 12, occ: 9 },
+    { name: "Surgikal",      cap: 12, occ: 10 },
+    { name: "Ponek",         cap: 6,  occ: 4 },
+    { name: "Anak",          cap: 6,  occ: 5 },
+  ];
+  const RANAP = [
+    { name: "Mawar 1",  cap: 20, occ: 6 },  { name: "Tulip 2", cap: 24, occ: 15 },
+    { name: "Anggrek",  cap: 30, occ: 23 }, { name: "Kelas 1", cap: 40, occ: 35 },
+    { name: "Kenanga",  cap: 16, occ: 13 }, { name: "Melati",  cap: 20, occ: 18 },
+    { name: "ICU",      cap: 10, occ: 8 },  { name: "VVIP",    cap: 5,  occ: 4 },
+  ];
+  const RANAP_TOP = 5;   // tampilkan yang sisanya paling banyak
+
+  const freeOf = (w) => w.cap - w.occ;
+  const toneOf = (free) => (free <= 2 ? "red" : free <= 5 ? "amber" : "green");
+
+  function bedHTML(w) {
+    const free = freeOf(w);
+    const segs = Array.from({ length: w.cap }, (_, i) => `<i class="${i < w.occ ? "on" : "free"}" style="--k:${i}"></i>`).join("");
+    return `<div class="bed" data-tone="${toneOf(free)}">
+      <div class="bed-head"><span>${w.name}</span><span class="bed-free"><b class="num">${free}</b><small>dari ${w.cap}</small></span></div>
+      <div class="seg">${segs}</div></div>`;
+  }
+  function paintBeds() {
+    document.getElementById("bed-igd").innerHTML = IGD_ROOMS.map(bedHTML).join("");
+    const top = [...RANAP].sort((a, b) => freeOf(b) - freeOf(a)).slice(0, RANAP_TOP);
+    document.getElementById("bed-ranap").innerHTML = top.map(bedHTML).join("");
+  }
+  paintBeds();
 
   /* ---------- entrance ---------- */
   function countUp(node) {
@@ -114,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.body.classList.add("ready", "go");
     document.querySelectorAll(".num").forEach(countUp);
-    document.getElementById("oxy-ring").setAttribute("stroke-dasharray", "85 100");
     setTimeout(() => document.querySelectorAll(".card").forEach((c) => c.classList.add("settled")), 1300);
   }));
 
