@@ -2,9 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = (s) => document.querySelector(s);
   const pad = (n) => String(n).padStart(2, "0");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  /* mode: <body data-mode="lite"> = filter kamar + hover sisa waktu; "superlite" (default) = tanpa keduanya */
-  const LITE = document.body.dataset.mode === "lite";
-  const CAPACITY = 18, MIN = 60000;
+  const MIN = 60000;
   const ST = {
     run:  { label: "Berlangsung",     color: "var(--green)" },
     near: { label: "Hampir selesai",  color: "var(--amber)" },
@@ -30,10 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prog = (o) => Math.max(0, (Date.now() - o.start) / (o.end - o.start));
   const status = (o) => { const p = prog(o); return p >= 1 ? "over" : p >= 0.8 ? "near" : "run"; };
 
-  const dur = (m) => (m >= 60 ? `${Math.floor(m / 60)} j ${m % 60} mnt` : `${m} mnt`);
-  const leftText = (o) => { const m = Math.round((o.end - Date.now()) / MIN); return m >= 0 ? `${dur(m)} lagi` : `Lewat ${dur(-m)}`; };
-
-  const state = { st: "all", room: null, sort: "ok", dir: 1 };
+  const state = { sort: "ok", dir: 1 };
   const rowsEl = $("#rows");
 
   /* ---------- jam & tema ---------- */
@@ -46,77 +41,37 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   $("#theme").addEventListener("click", () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark"; });
 
-  /* ---------- filter, urut ---------- */
+  /* ---------- urut ---------- */
   const val = { ok: (o) => o.ok, ini: (o) => o.ini, sx: (o) => o.sx, age: (o) => o.age, end: (o) => o.end, op: (o) => o.op, an: (o) => o.an, act: (o) => o.act, dest: (o) => o.dest };
-  function visible() {
-    const list = OPS.filter((o) =>
-      (state.st === "all" || status(o) === state.st) &&
-      (!state.room || o.ok === state.room));
+  function sorted() {
     const k = val[state.sort];
-    return list.sort((a, b) => (k(a) > k(b) ? 1 : k(a) < k(b) ? -1 : 0) * state.dir);
+    return [...OPS].sort((a, b) => (k(a) > k(b) ? 1 : k(a) < k(b) ? -1 : 0) * state.dir);
   }
 
   /* ---------- tampilan ---------- */
   const rowHTML = (o, i, anim) => {
-    const s = status(o), c = ST[s].color;
+    const c = ST[status(o)].color;
     return `<tr class="${anim ? "in" : ""}" data-ok="${o.ok}" style="--c:${c};--k:${i}">
       <td><span class="ok"><i></i>${roman(o.ok)}</span></td>
       <td class="ini">${esc(o.ini)}</td><td class="sx">${o.sx}</td><td class="age">${o.age} th</td>
-      <td class="tm">${LITE ? `<b tabindex="0">${hm(o.start)} - ${hm(o.end)}<span class="tip" role="tooltip">${leftText(o)}</span></b>` : `<b>${hm(o.start)} - ${hm(o.end)}</b>`}</td>
+      <td class="tm"><b>${hm(o.start)} - ${hm(o.end)}</b></td>
       <td>${esc(o.op)}</td><td>${esc(o.an)}</td><td>${esc(o.act)}</td><td><span class="dest">${esc(o.dest)}</span></td></tr>`;
   };
 
   function render(anim) {
-    const list = visible();
+    const list = sorted();
     rowsEl.innerHTML = list.map((o, i) => rowHTML(o, i, anim && !reduce)).join("");
     $("#empty").hidden = list.length > 0;
-    $("#count").textContent = `${list.length} dari ${OPS.length} operasi berlangsung`;
-    paintChips(); if (LITE) paintRooms();
+    $("#count").textContent = `${list.length} operasi berlangsung`;
     document.querySelectorAll("th button").forEach((b) => { const on = b.dataset.sort === state.sort; b.classList.toggle("on", on); b.classList.toggle("desc", on && state.dir === -1); });
   }
 
-  function paintChips() {
-    const n = (k) => OPS.filter((o) => k === "all" || status(o) === k).length;
-    $("#chips").innerHTML = [["all", "Semua", "var(--ink)"], ...Object.entries(ST).map(([k, v]) => [k, v.label, v.color])]
-      .map(([k, l, c]) => `<button class="chip ${state.st === k ? "on" : ""}" type="button" data-st="${k}" style="--c:${c}"><i></i>${l} <em>${n(k)}</em></button>`).join("");
-  }
-  function paintRooms() {
-    $("#rooms").innerHTML = Array.from({ length: CAPACITY }, (_, i) => {
-      const o = OPS.find((x) => x.ok === i + 1);
-      if (!o) return `<span class="tile" title="OK ${roman(i + 1)}: kosong">${roman(i + 1)}</span>`;
-      return `<button type="button" class="tile used ${state.room === o.ok ? "sel" : ""}" data-room="${o.ok}" style="--c:${ST[status(o)].color}" title="OK ${roman(o.ok)}: ${esc(o.act)}, ${leftText(o)}">${roman(o.ok)}</button>`;
-    }).join("");
-  }
-
-  /* ---------- ringkasan ---------- */
-  const shown = {};
-  function paintStats(anim) {
-    const occ = OPS.length, v = { cap: CAPACITY, occ, free: CAPACITY - occ, pct: Math.round((occ / CAPACITY) * 100) };
-    document.querySelectorAll("[data-key]").forEach((n) => {
-      const k = n.dataset.key, to = v[k], from = shown[k] ?? 0;
-      shown[k] = to; n.dataset.suffix = k === "pct" ? "%" : "";
-      if (!anim || reduce || from === to) { n.textContent = to; return; }
-      const t = performance.now();
-      const step = (now) => { const e = 1 - Math.pow(1 - Math.min(1, (now - t) / 800), 3); n.textContent = Math.round(from + (to - from) * e); if (e < 1) requestAnimationFrame(step); };
-      requestAnimationFrame(step);
-    });
-  }
-
   /* ---------- event ---------- */
-  $("#chips").addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (!b) return; state.st = state.st === b.dataset.st ? "all" : b.dataset.st; render(true); });
-  $("#rooms")?.addEventListener("click", (e) => {
-    const t = e.target.closest(".tile.used"); if (!t) return;
-    const ok = +t.dataset.room; state.room = state.room === ok ? null : ok; state.st = "all"; render(false);
-    const r = rowsEl.querySelector(`[data-ok="${ok}"]`);
-    if (r) { r.classList.add("flash"); r.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); }
-  });
   document.querySelectorAll("th button").forEach((b) => b.addEventListener("click", () => {
     const k = b.dataset.sort; if (state.sort === k) state.dir *= -1; else { state.sort = k; state.dir = 1; } render(true);
   }));
-  $("#reset").addEventListener("click", () => { Object.assign(state, { st: "all", room: null }); render(true); });
 
-  if (!LITE) $("#rooms")?.remove();
   setInterval(clock, 1000);
   setInterval(() => render(false), 30000);
-  clock(); render(true); paintStats(true);
+  clock(); render(true);
 });

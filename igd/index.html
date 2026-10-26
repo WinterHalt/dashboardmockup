@@ -64,15 +64,11 @@
 
     <div class="c-side">
       <!-- OK -->
-      <section class="card c-ok">
-        <h2>Kamar Operasi</h2>
-        <div class="pipe">
-          <div class="step"><i class="dot" style="background:var(--blue-bg);color:var(--blue)">1</i><span>Bersiap</span><b class="b"><span class="num">8</span><small>orang</small></b></div>
-          <div class="step is-live"><i class="dot" style="background:var(--amber-bg);color:#c98400">2</i><span>Sedang berlangsung</span><b class="a"><span class="num">8</span><small>orang</small></b></div>
-          <div class="step"><i class="dot" style="background:var(--green-bg);color:var(--green)">3</i><span>Sudah selesai</span><b class="g"><span class="num">4</span><small>orang</small></b></div>
-        </div>
-        <a class="shortcut" href="../operasi/index.html"><span>Dashboard Operasi</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </section>
+      <a class="card c-ok c-panel" href="../operasi/index.html" aria-label="Dashboard Instalasi Bedah Sentral">
+        <span class="panel-label">Kamar Operasi</span>
+        <span class="panel-title">Dashboard Instalasi Bedah Sentral</span>
+        <span class="panel-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
 
       <!-- Respon time >= 4 jam -->
       <a class="card c-late" href="#" data-page="respon-4jam" aria-label="Pasien dengan respon time 4 jam atau lebih">

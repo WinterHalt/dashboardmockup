@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../assets/operasi/style.css">
 <script src="../assets/operasi/script.js" defer></script>
 </head>
-<body data-mode="superlite">
+<body>
 <main class="board">
   <header class="top">
     <div class="brand">
@@ -25,17 +25,14 @@
     </div>
   </header>
 
-  <section class="stats" aria-label="Ringkasan">
+  <!-- <section class="stats" aria-label="Ringkasan">
     <div class="stat"><b class="num" data-key="cap">0</b><span>Total kamar operasi</span></div>
     <div class="stat"><b class="num" data-key="occ">0</b><span>Sedang dipakai</span></div>
     <div class="stat s-green"><b class="num" data-key="free">0</b><span>Tersedia</span></div>
     <div class="stat s-amber"><b class="num" data-key="pct">0</b><span>Keterisian</span></div>
-  </section>
+  </section> -->
 
   <section class="card list-card">
-    <div class="toolbar">
-      <div class="chips" id="chips" role="group" aria-label="Filter status operasi"></div>
-    </div>
     <p class="count" id="count"></p>
 
     <div class="scroll"><table>
@@ -58,7 +55,7 @@
       <tbody id="rows"></tbody>
     </table></div>
 
-    <div class="empty" id="empty" hidden><p>Tidak ada operasi yang cocok.</p><button type="button" id="reset">Tampilkan semua</button></div>
+    <div class="empty" id="empty" hidden><p>Tidak ada operasi berlangsung.</p></div>
   </section>
   <footer class="note">Data contoh. Hanya inisial pasien yang ditampilkan.</footer>
 </main>
