@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospital Command Center · Mockup Executive</title>
+<style>
+:root{--text:#0e1a2e;--muted:#5d6b82;--line:#e3e9f2;--red:#e5484d;--amber:#f2a20c;--green:#1fa971;--blue:#2f6fed}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light}
+body{min-height:100vh;padding:32px 28px 40px;
+  background:radial-gradient(900px 420px at 85% -10%,#dfeafd 0%,transparent 65%),radial-gradient(700px 380px at -5% 0%,#e3f6ef 0%,transparent 60%),#f2f5fa;
+  color:var(--text);font:15px/1.4 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.board{display:flex;flex-direction:column;gap:16px;max-width:1280px;margin:0 auto}
+.num{font-variant-numeric:tabular-nums}
+.ic{display:inline-block;width:1em;height:1em;fill:currentColor;flex:none}
+
+/* Toolbar mock (hapus saat masuk PHP) */
+.devbar{max-width:1280px;margin:0 auto 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:8px 14px;border:1px dashed #b9c4d6;border-radius:12px;background:#ffffffaa;font-size:13px;color:var(--muted)}
+.devbar button{font:inherit;font-weight:600;padding:5px 12px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text);cursor:pointer}
+.devbar button[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text)}
+.devbar button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* Header */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:6px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand h1{font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.15}
+.brand p{margin-top:6px;font-size:14px}
+.mark{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:var(--red);color:#fff;font-size:28px;box-shadow:0 8px 18px -8px rgba(229,72,77,.7)}
+.clock{text-align:right}
+.clock b{display:block;font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.1;font-variant-numeric:tabular-nums}
+.clock span{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:live 2s infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(31,169,113,.5)}70%,100%{box-shadow:0 0 0 8px rgba(31,169,113,0)}}
+
+/* Kartu */
+.card{padding:22px 24px 24px;background:#fff;border:1px solid var(--line);border-radius:20px;
+  box-shadow:0 1px 2px rgba(16,32,64,.04),0 8px 24px -12px rgba(16,32,64,.12)}
+.card h2{margin-bottom:16px;font-size:15px;font-weight:650}
+
+/* Baris 1 */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{display:flex;flex-direction:column;gap:4px;padding:18px 22px 16px}
+.kpi span{font-size:14px;font-weight:600}
+.kpi b{font-size:40px;font-weight:700;letter-spacing:-1.5px;line-height:1.1}
+.kpi small{font-size:12px;color:var(--muted);line-height:1.3}
+.k-late{position:relative;background:#fdecec;border-color:#f2c9cb;cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .2s}
+.k-late::before{content:"";position:absolute;top:18px;right:18px;width:9px;height:9px;border-radius:50%;background:var(--red);animation:ping 2.2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(229,72,77,.5)}70%,100%{box-shadow:0 0 0 9px rgba(229,72,77,0)}}
+.k-late:hover{transform:translateY(-3px);border-color:var(--red);box-shadow:0 14px 26px -16px var(--red)}
+.k-late:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+/* Baris 2 */
+.grid{display:grid;grid-template-columns:1.05fr 1fr 1.2fr;gap:16px}
+.c-triase,.c-bed{display:flex;flex-direction:column}
+
+/* Triase: angka di tengah */
+.triage{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;align-content:stretch}
+.tile{position:relative;display:grid;place-items:center;min-height:96px;padding:14px 12px 10px;border-radius:16px;background:var(--cb);transition:transform .3s,box-shadow .3s}
+.tile span{position:absolute;top:12px;left:14px;font-size:14px;font-weight:650}
+.tile b{font-size:46px;font-weight:700;letter-spacing:-1.8px;line-height:1;padding-top:10px}
+.tile:hover{transform:translateY(-3px);box-shadow:0 12px 22px -14px var(--c)}
+.tile:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.t-surgikal{--c:#2f6fed;--cb:#e8f0fe}.t-resusitasi{--c:#e5484d;--cb:#fdecec}.t-anak{--c:#e5679f;--cb:#fdebf3}
+.t-medikal{--c:#1fa971;--cb:#e4f6ee}.t-obgyn{--c:#7c5cf0;--cb:#efebfd}.t-forensik{--c:#56657c;--cb:#eceff5}
+/* Merah/Kuning/Hijau */
+.t-merah{--c:#e5484d;--cb:#fdecec}.t-kuning{--c:#f2a20c;--cb:#fef3dc}.t-hijau{--c:#1fa971;--cb:#e4f6ee}
+.solid.t-merah{--cb:#e5484d;color:#fff}.solid.t-kuning{--cb:#f2a20c;color:#2b1d00}.solid.t-hijau{--cb:#1fa971;color:#fff}
+/* Opsi B: baris chip tipis */
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chips .tile{min-height:0;height:56px;padding:0 14px;display:flex;align-items:center;justify-content:space-between}
+.chips .tile span{position:static;display:flex;align-items:center;gap:8px}
+.chips .tile span::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chips .tile b{padding:0;font-size:30px;letter-spacing:-1px}
+.triage-wrap{flex:1;display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.triage-wrap .triage{margin-bottom:0}
+
+/* Tabel */
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.tbl th{font-size:12px;font-weight:600;color:var(--muted);text-align:right;padding:0 0 8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left;padding-left:0}
+.tbl td{padding:11px 0 11px 8px;text-align:right;font-size:15px;font-weight:600;border-bottom:1px solid #eef2f8}
+.tbl td:first-child{font-weight:600;font-size:14px}
+.tbl tr.total td{border-bottom:0;font-weight:700;background:#f6f8fc}
+.tbl tr.total td:first-child{padding-left:10px;border-radius:10px 0 0 10px}
+.tbl tr.total td:last-child{padding-right:10px;border-radius:0 10px 10px 0}
+.tbl tr.grp th{padding:16px 0 6px;border:0;font-size:13px;color:var(--text);text-align:left}
+.tbl tr.grp:first-of-type th{padding-top:0}
+.tbl td.dim{color:var(--muted);font-weight:500}
+.occ{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.occ i{display:block;width:44px;height:6px;border-radius:3px;background:#e9eef6;overflow:hidden}
+.occ i u{display:block;height:100%;background:var(--c);border-radius:3px}
+.occ em{font-style:normal;min-width:38px;color:var(--c)}
+[data-tone=green]{--c:var(--green)}[data-tone=amber]{--c:#d98a00}[data-tone=red]{--c:var(--red)}
+.ranap td:first-child{font-size:12.5px;line-height:1.25;padding-right:4px}
+.ranap td{font-size:14px}
+.ranap th{padding-left:6px}
+
+.shortcut{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding:12px 14px;border-radius:14px;background:#f2f5fa;font-size:14px;font-weight:600;transition:background .2s}
+.shortcut .ic{font-size:16px;transition:transform .25s}
+.shortcut:hover{background:#e8f0fe}.shortcut:hover .ic{transform:translateX(4px)}
+.shortcut:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.c-bed .tbl{margin-bottom:18px}
+
+/* Baris 3: IBS */
+.ibs-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.ibs-head h2{margin:0;font-size:16px}
+.ibs-head .shortcut{margin:0;padding:9px 14px}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:12px}
+.stage{display:grid;place-items:center;position:relative;min-height:118px;padding:14px;border-radius:16px;background:var(--cb)}
+.stage span{position:absolute;top:12px;left:16px;font-size:14px;font-weight:650}
+.stage small{position:absolute;bottom:11px;left:16px;right:16px;font-size:12px;color:var(--muted);line-height:1.3}
+.stage b{font-size:52px;font-weight:700;letter-spacing:-2px;line-height:1;padding-bottom:6px}
+.s-jadwal{--cb:#e8f0fe}.s-jalan{--cb:#fef3dc}.s-selesai{--cb:#e4f6ee}
+.s-jadwal b{color:#1f55c4}.s-jalan b{color:#a86a00}.s-selesai b{color:#12804f}
+.flow>.ic{align-self:center;font-size:22px;color:#9aa8bf}
+.prog{margin-top:18px}
+.prog-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.prog-meta b{color:var(--text)}
+.bar{display:flex;gap:3px;height:12px}
+.bar i{display:block;border-radius:6px;min-width:6px}
+.bar .b1{background:var(--blue)}.bar .b2{background:var(--amber)}.bar .b3{background:var(--green)}
+
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}.c-triase{grid-column:1/-1}}
+@media (max-width:700px){body{padding:20px 14px 32px}.kpis,.grid{grid-template-columns:1fr}.clock{text-align:left}
+  .flow{grid-template-columns:1fr}.flow>.ic{transform:rotate(90deg);justify-self:center}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></symbol>
+</defs></svg>
+
+<div class="devbar" role="group" aria-label="Mockup opsi triase">
+  <b>MOCKUP</b> Opsi triase:
+  <button data-opt="A" aria-pressed="false">A · 3×3 sama rata</button>
+  <button data-opt="B" aria-pressed="true">B · 3×2 + baris chip</button>
+  <button data-opt="C" aria-pressed="false">C · 3×3, baris 3 solid</button>
+</div>
+
+<main class="board">
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><svg class="ic"><use href="#i-plus"/></svg></span>
+      <div><h1>Hospital Command Center</h1><p>Rumah Sakit Umum Pusat Dr M Djamil Padang</p></div>
+    </div>
+    <div class="clock"><b id="time">--:--:--</b><span><i class="live" aria-hidden="true"></i><em id="date" style="font-style:normal">-</em></span></div>
+  </header>
+
+  <section class="kpis" aria-label="Ringkasan">
+    <div class="card kpi"><span>Total Kunjungan</span><b class="num">3</b></div>
+    <div class="card kpi"><span>Total Pulang</span><b class="num">0</b></div>
+    <div class="card kpi"><span>Total Rawat Inap</span><b class="num">1</b></div>
+    <a class="card kpi k-late" href="#" title="Persentase pasien dengan waktu tunggu / response time ≥ 3 jam">
+      <span>Waktu Tunggu ≥ 3 Jam</span><b class="num">100 %</b><small>Pasien dengan response time ≥ 3 jam</small>
+    </a>
+  </section>
+
+  <div class="grid">
+    <!-- Triase -->
+    <section class="card c-triase" aria-label="Triase medis">
+      <h2>Triase Medis</h2>
+      <div class="triage-wrap" id="triage"></div>
+      <a class="shortcut" href="#"><span>Daftar Pasien Instalasi Gawat Darurat</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+
+    <!-- Bed IGD -->
+    <section class="card c-bed" aria-label="Ketersediaan bed IGD">
+      <h2>Ketersediaan Bed IGD</h2>
+      <table class="tbl" id="tbl-igd"></table>
+      <a class="shortcut" href="#"><span>Daftar Pasien High Care Unit Intermediate</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+
+    <!-- Bed Ranap -->
+    <section class="card c-bed" aria-label="Ketersediaan bed rawat inap">
+      <h2>Ketersediaan Bed Rawat Inap</h2>
+      <table class="tbl ranap" id="tbl-ranap"></table>
+      <a class="shortcut" href="#"><span>Ketersediaan Tempat Tidur</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+  </div>
+
+  <!-- IBS -->
+  <section class="card" aria-label="Instalasi Bedah Sentral">
+    <div class="ibs-head">
+      <h2>Dashboard Instalasi Bedah Sentral</h2>
+      <a class="shortcut" href="#"><span>Buka dashboard lengkap</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </div>
+    <div class="flow" id="ibs-flow"></div>
+    <div class="prog" id="ibs-prog"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  /* ===== DATA MOCK (ganti dengan data controller) ===== */
+  var triase=[
+    {k:'surgikal',l:'Surgikal',v:1},{k:'resusitasi',l:'Resusitasi',v:1},{k:'anak',l:'Anak',v:0},
+    {k:'medikal',l:'Medikal',v:0},{k:'obgyn',l:'Obgyn',v:0},{k:'forensik',l:'Forensik',v:0}];
+  var level=[{k:'merah',l:'Merah',v:1},{k:'kuning',l:'Kuning',v:1},{k:'hijau',l:'Hijau',v:1}];
+  /* IGD: free = bed tersedia (4/4 = semua tersedia) */
+  var igd=[{n:'Resusitasi',t:4,f:4},{n:'Obgin',t:6,f:6},{n:'Anak',t:6,f:6},{n:'Medikal',t:12,f:12},{n:'Surgikal',t:12,f:11}];
+  /* Ranap: pembagian kelompok masih sementara */
+  var ranap=[
+    {g:'Intensive (HCU)',rows:[{n:'LAVENDER 10 (HCU ANAK)',t:10,f:0},{n:'LAVENDER 6 (HCU PINERE)',t:4,f:0},{n:'LAVENDER 7 (HCU PARU)',t:3,f:0}]},
+    {g:'Non-intensive',rows:[{n:'EDELWIS (GERIATRI)',t:12,f:0},{n:'ISTANO PAGARUYUANG',t:3,f:0}]}];
+  var ibs={jadwal:4,jalan:3,selesai:5};
+
+  /* ===== Helper ===== */
+  function tone(p){return p>90?'red':(p>=70?'amber':'green');}
+  function pct(a,b){return b?Math.round(a/b*100):0;}
+  function sum(a,k){return a.reduce(function(s,x){return s+x[k];},0);}
+  function tile(x,cls){return '<a class="tile t-'+x.k+(cls?' '+cls:'')+'" href="#"><span>'+x.l+'</span><b class="num">'+x.v+'</b></a>';}
+
+  /* ===== Triase (opsi A/B/C) ===== */
+  function renderTriase(opt){
+    var h='';
+    if(opt==='A'){
+      h='<div class="triage">'+triase.map(function(x){return tile(x);}).join('')+level.map(function(x){return tile(x);}).join('')+'</div>';
+    }else if(opt==='C'){
+      h='<div class="triage">'+triase.map(function(x){return tile(x);}).join('')+level.map(function(x){return tile(x,'solid');}).join('')+'</div>';
+    }else{
+      h='<div class="triage">'+triase.map(function(x){return tile(x);}).join('')+'</div>'+
+        '<div class="chips">'+level.map(function(x){return tile(x);}).join('')+'</div>';
+    }
+    document.getElementById('triage').innerHTML=h;
+    [].forEach.call(document.querySelectorAll('.devbar button'),function(b){b.setAttribute('aria-pressed',b.dataset.opt===opt);});
+  }
+  [].forEach.call(document.querySelectorAll('.devbar button'),function(b){b.onclick=function(){renderTriase(b.dataset.opt);};});
+  renderTriase('B');
+
+  /* ===== Tabel IGD ===== */
+  function occCell(p){return '<div class="occ" data-tone="'+tone(p)+'"><i><u style="width:'+p+'%"></u></i><em>'+p+'%</em></div>';}
+  var T=0,F=0,h='<thead><tr><th>Zona</th><th>Terisi</th><th>Total</th><th>Sisa</th><th>Okupansi</th></tr></thead><tbody>';
+  igd.forEach(function(r){var o=r.t-r.f;T+=r.t;F+=r.f;
+    h+='<tr><td>'+r.n+'</td><td>'+o+'</td><td class="dim">'+r.t+'</td><td>'+r.f+'</td><td>'+occCell(pct(o,r.t))+'</td></tr>';});
+  h+='<tr class="total"><td>Total IGD</td><td>'+(T-F)+'</td><td>'+T+'</td><td>'+F+'</td><td>'+occCell(pct(T-F,T))+'</td></tr></tbody>';
+  document.getElementById('tbl-igd').innerHTML=h;
+
+  /* ===== Tabel Ranap ===== */
+  h='<thead><tr><th>Ruangan</th><th>Total</th><th>Terisi</th><th>Sisa</th><th>% Isi</th><th>% Sisa</th></tr></thead><tbody>';
+  function rcell(p,k){return '<td data-tone="'+tone(p)+'" style="color:var(--c)">'+p+'%</td>';}
+  ranap.forEach(function(g){
+    h+='<tr class="grp"><th colspan="6">'+g.g+'</th></tr>';
+    var gt=0,gf=0;
+    g.rows.forEach(function(r){var o=r.t-r.f;gt+=r.t;gf+=r.f;var p=pct(o,r.t);
+      h+='<tr><td>'+r.n+'</td><td class="dim">'+r.t+'</td><td>'+o+'</td><td>'+r.f+'</td>'+rcell(p)+'<td class="dim">'+(100-p)+'%</td></tr>';});
+    var go=gt-gf,gp=pct(go,gt);
+    h+='<tr class="total"><td>Subtotal</td><td>'+gt+'</td><td>'+go+'</td><td>'+gf+'</td>'+rcell(gp)+'<td>'+(100-gp)+'%</td></tr>';
+  });
+  document.getElementById('tbl-ranap').innerHTML=h+'</tbody>';
+
+  /* ===== IBS ===== */
+  var tot=ibs.jadwal+ibs.jalan+ibs.selesai,ps=pct(ibs.selesai,tot);
+  document.getElementById('ibs-flow').innerHTML=
+    '<div class="stage s-jadwal"><span>Terjadwal</span><b class="num">'+ibs.jadwal+'</b><small>Belum diterima IBS</small></div>'+
+    '<svg class="ic"><use href="#i-arrow-right"/></svg>'+
+    '<div class="stage s-jalan"><span>Berlangsung</span><b class="num">'+ibs.jalan+'</b><small>Diterima IBS sampai pemulihan</small></div>'+
+    '<svg class="ic"><use href="#i-arrow-right"/></svg>'+
+    '<div class="stage s-selesai"><span>Selesai</span><b class="num">'+ibs.selesai+'</b><small>Sudah kembali ke ruangan</small></div>';
+  function seg(n,c){return n?'<i class="'+c+'" style="flex:'+n+'"></i>':'';}
+  document.getElementById('ibs-prog').innerHTML=
+    '<div class="prog-meta"><span>Total operasi hari ini: <b class="num">'+tot+'</b></span><span><b class="num">'+ps+'%</b> selesai</span></div>'+
+    '<div class="bar" role="img" aria-label="Terjadwal '+ibs.jadwal+', berlangsung '+ibs.jalan+', selesai '+ibs.selesai+'">'+seg(ibs.selesai,'b3')+seg(ibs.jalan,'b2')+seg(ibs.jadwal,'b1')+'</div>';
+
+  /* ===== Jam ===== */
+  var hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],bulan=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  function pad(n){return n<10?'0'+n:''+n;}
+  function tick(){var d=new Date();
+    document.getElementById('time').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    document.getElementById('date').textContent=hari[d.getDay()]+', '+d.getDate()+' '+bulan[d.getMonth()]+' '+d.getFullYear();}
+  tick();setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
