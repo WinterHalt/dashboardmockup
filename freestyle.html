@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospital Command Center · RSUP Dr M Djamil Padang</title>
+<style>
+:root{
+  --paper:#e8ecf1; --ink:#0c1b33; --panel:#fff; --line:#d3dae5; --muted:#586984;
+  --red:#d93a40; --amber:#e8a000; --green:#12935f; --blue:#2a62d9; --violet:#6d4fe0;
+  --num:"DIN Alternate","Bahnschrift","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;padding:30px 28px 40px;background:var(--paper);color:var(--ink);
+  font:15px/1.4 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.board{display:flex;flex-direction:column;gap:14px;max-width:1280px;margin:0 auto}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:700}
+.ic{display:inline-block;width:1em;height:1em;fill:currentColor;flex:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* Header */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding:0 4px 6px}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--red);color:#fff;font-size:28px}
+.brand h1{font-size:23px;font-weight:700;letter-spacing:-.3px;line-height:1.15}
+.brand p{margin-top:4px;font-size:14px;color:var(--muted)}
+.clock{text-align:right}
+.clock b{display:block;font:700 38px/1 var(--num);letter-spacing:1px;font-variant-numeric:tabular-nums}
+.clock span{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:13px;color:var(--muted)}
+.live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:live 2s infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(18,147,95,.5)}70%,100%{box-shadow:0 0 0 8px rgba(18,147,95,0)}}
+
+/* Panel */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px 22px}
+.card h2{margin-bottom:16px;font-size:15px;font-weight:700}
+
+/* KPI: pita tinta, angka jadi tokoh utama */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{display:flex;flex-direction:column;gap:2px;padding:16px 22px 14px;background:var(--ink);border-color:var(--ink);color:#fff;border-radius:14px;min-height:128px}
+.kpi span{font-size:14px;font-weight:600;color:#aebbd2}
+.kpi b{margin-top:auto;font-size:68px;line-height:.95;letter-spacing:-1px}
+.kpi small{font-size:12px;color:#ffd0d2;margin-top:6px}
+.k-late{position:relative;background:var(--red);border-color:var(--red)}
+.k-late span{color:#ffe3e4}
+.k-late::before{content:"";position:absolute;top:18px;right:18px;width:10px;height:10px;border-radius:50%;background:#fff;animation:ping 2.2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%,100%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
+.k-late:hover{filter:brightness(1.06)}
+
+/* Baris 2 */
+.grid{display:grid;grid-template-columns:1.1fr 1fr 1.05fr;gap:14px}
+.c-triase,.c-bed{display:flex;flex-direction:column}
+
+/* Triase */
+.tri-wrap{flex:1;display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.triage{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{position:relative;display:grid;place-items:center;min-height:96px;padding:12px;border-radius:10px;background:color-mix(in srgb,var(--c) 9%,#fff);border:1px solid color-mix(in srgb,var(--c) 28%,#fff);overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c)}
+.tile span{position:absolute;top:10px;left:16px;font-size:13.5px;font-weight:650}
+.tile b{font-size:52px;line-height:1;padding-top:12px;color:var(--c)}
+.tile:hover{border-color:var(--c)}
+.t-surgikal{--c:#2a62d9}.t-resusitasi{--c:#d93a40}.t-anak{--c:#d6417f}
+.t-medikal{--c:#12935f}.t-obgyn{--c:#6d4fe0}.t-forensik{--c:#4c5b73}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{display:flex;align-items:center;justify-content:space-between;height:58px;padding:0 16px;border-radius:10px;font-weight:700;font-size:14px}
+.chip b{font-size:34px;line-height:1}
+.c-merah{background:var(--red);color:#fff}.c-kuning{background:var(--amber);color:#2b1d00}.c-hijau{background:var(--green);color:#fff}
+
+/* Tabel IGD */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:0 0 9px 8px;text-align:right;font-size:12.5px;font-weight:600;color:var(--muted);border-bottom:2px solid var(--ink);white-space:nowrap}
+.tbl td{padding:13px 0 13px 8px;text-align:right;border-bottom:1px solid var(--line);font-size:26px;line-height:1.1}
+.tbl th:first-child,.tbl td:first-child{text-align:left;padding-left:0}
+.tbl td:first-child{font:600 15px/1.2 "Segoe UI",system-ui,sans-serif}
+.tbl td.t{color:#97a4ba;font-weight:500}
+.tbl td.o{color:var(--red)}
+.tbl td.s{color:var(--green)}
+.tbl-wrap{margin-bottom:18px}
+
+/* Ranap kumulatif */
+.rk{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.rk-i{padding:14px 16px 13px;border-radius:10px;background:#f1f4f9;border:1px solid var(--line)}
+.rk-i.main{background:var(--ink);border-color:var(--ink);color:#fff}
+.rk-h{display:flex;justify-content:space-between;align-items:flex-end}
+.rk-h span{font-size:14px;font-weight:650}
+.rk-h b{font-size:44px;line-height:.9;color:var(--c)}
+.rk-i.main .rk-h b{color:#fff}
+.rk-bar{display:flex;height:10px;margin:10px 0 9px;border-radius:5px;overflow:hidden;background:#d6deea}
+.rk-i.main .rk-bar{background:#2a3b5a}
+.rk-bar u{display:block;background:var(--c)}
+.rk-i.main .rk-bar u{background:#fff}
+.rk-f{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.rk-i.main .rk-f{color:#aebbd2}
+.rk-f b{font:700 15px var(--num);color:var(--ink)}
+.rk-i.main .rk-f b{color:#fff}
+[data-tone=green]{--c:var(--green)}[data-tone=amber]{--c:#c98400}[data-tone=red]{--c:var(--red)}
+
+.shortcut{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding:12px 14px;border-radius:10px;background:#eef2f8;border:1px solid var(--line);font-size:14px;font-weight:600;transition:background .2s}
+.shortcut .ic{font-size:16px;transition:transform .25s}
+.shortcut:hover{background:#dfe8f8}.shortcut:hover .ic{transform:translateX(4px)}
+
+/* IBS */
+.ibs-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.ibs-head h2{margin:0;font-size:16px}
+.ibs-head .shortcut{margin:0;padding:9px 14px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stage{position:relative;display:grid;place-items:center;min-height:128px;padding:14px 16px;border-radius:10px;background:color-mix(in srgb,var(--c) 8%,#fff);border:1px solid color-mix(in srgb,var(--c) 26%,#fff);border-top:5px solid var(--c)}
+.stage span{position:absolute;top:12px;left:16px;font-size:14px;font-weight:700}
+.stage small{position:absolute;bottom:11px;left:16px;right:16px;font-size:12px;color:var(--muted);line-height:1.3}
+.stage b{font-size:62px;line-height:1;padding-bottom:6px;color:var(--c)}
+.s-jadwal{--c:#2a62d9}.s-tiba{--c:#6d4fe0}.s-jalan{--c:#d68a00}.s-selesai{--c:#12935f}
+.prog{margin-top:16px}
+.prog-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.prog-meta b{font:700 16px var(--num);color:var(--ink)}
+.bar{display:flex;gap:3px;height:12px}
+.bar i{display:block;border-radius:6px;min-width:6px}
+
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}.c-triase{grid-column:1/-1}.flow{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){body{padding:20px 14px 32px}.kpis,.grid{grid-template-columns:1fr}.clock{text-align:left}.flow{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></symbol>
+</defs></svg>
+
+<main class="board">
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><svg class="ic"><use href="#i-plus"/></svg></span>
+      <div><h1>Hospital Command Center</h1><p>Rumah Sakit Umum Pusat Dr M Djamil Padang</p></div>
+    </div>
+    <div class="clock"><b id="time">--:--:--</b><span><i class="live" aria-hidden="true"></i><em id="date" style="font-style:normal">-</em></span></div>
+  </header>
+
+  <section class="kpis" aria-label="Ringkasan">
+    <div class="card kpi"><span>Total Kunjungan</span><b class="n">3</b></div>
+    <div class="card kpi"><span>Total Pulang</span><b class="n">0</b></div>
+    <div class="card kpi"><span>Total Rawat Inap</span><b class="n">1</b></div>
+    <a class="card kpi k-late" href="#" title="Persentase pasien dengan waktu tunggu / response time ≥ 3 jam">
+      <span>Waktu Tunggu ≥ 3 Jam</span><b class="n">100%</b><small>Pasien dengan response time ≥ 3 jam</small>
+    </a>
+  </section>
+
+  <div class="grid">
+    <section class="card c-triase" aria-label="Triase medis">
+      <h2>Triase Medis</h2>
+      <div class="tri-wrap" id="triage"></div>
+      <a class="shortcut" href="#"><span>Daftar Pasien Instalasi Gawat Darurat</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+
+    <section class="card c-bed" aria-label="Ketersediaan bed IGD">
+      <h2>Ketersediaan Bed IGD</h2>
+      <div class="tbl-wrap"><table class="tbl" id="tbl-igd"></table></div>
+      <a class="shortcut" href="#"><span>Daftar Pasien High Care Unit Intermediate</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+
+    <section class="card c-bed" aria-label="Ketersediaan bed rawat inap">
+      <h2>Ketersediaan Bed Rawat Inap</h2>
+      <div class="rk" id="ranap"></div>
+      <a class="shortcut" href="#"><span>Ketersediaan Tempat Tidur</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </section>
+  </div>
+
+  <section class="card" aria-label="Instalasi Bedah Sentral">
+    <div class="ibs-head">
+      <h2>Dashboard Instalasi Bedah Sentral</h2>
+      <a class="shortcut" href="#"><span>Buka dashboard lengkap</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
+    </div>
+    <div class="flow" id="ibs-flow"></div>
+    <div class="prog" id="ibs-prog"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  /* ===== DATA MOCK (ganti dengan data controller) ===== */
+  var triase=[{k:'surgikal',l:'Surgikal',v:1},{k:'resusitasi',l:'Resusitasi',v:1},{k:'anak',l:'Anak',v:0},
+              {k:'medikal',l:'Medikal',v:0},{k:'obgyn',l:'Obgyn',v:0},{k:'forensik',l:'Forensik',v:0}];
+  var level=[{k:'merah',l:'Merah',v:1},{k:'kuning',l:'Kuning',v:1},{k:'hijau',l:'Hijau',v:1}];
+  var igd=[{n:'Resusitasi',t:4,f:4},{n:'Obgin',t:6,f:6},{n:'Anak',t:6,f:6},{n:'Medikal',t:12,f:12},{n:'Surgikal',t:12,f:11}]; /* f = tersedia */
+  var rn=[{n:'Intensive (HCU)',t:17,o:17},{n:'Biasa',t:15,o:15}];
+  var ibs={jadwal:4,tiba:1,jalan:2,selesai:5};
+
+  function pct(a,b){return b?Math.round(a/b*100):0;}
+  function tone(p){return p>90?'red':(p>=70?'amber':'green');}
+  function $(id){return document.getElementById(id);}
+
+  /* Triase: 3x2 + baris chip merah/kuning/hijau */
+  $('triage').innerHTML=
+    '<div class="triage">'+triase.map(function(x){return '<a class="tile t-'+x.k+'" href="#"><span>'+x.l+'</span><b class="n">'+x.v+'</b></a>';}).join('')+'</div>'+
+    '<div class="chips">'+level.map(function(x){return '<a class="chip c-'+x.k+'" href="#"><span>'+x.l+'</span><b class="n">'+x.v+'</b></a>';}).join('')+'</div>';
+
+  /* IGD */
+  $('tbl-igd').innerHTML='<thead><tr><th>Triase</th><th>Terisi</th><th>Total</th><th>Sisa</th></tr></thead><tbody>'+
+    igd.map(function(r){return '<tr><td>'+r.n+'</td><td class="n o">'+(r.t-r.f)+'</td><td class="n t">'+r.t+'</td><td class="n s">'+r.f+'</td></tr>';}).join('')+'</tbody>';
+
+  /* Ranap kumulatif */
+  var all={n:'Seluruh Rawat Inap',t:rn[0].t+rn[1].t,o:rn[0].o+rn[1].o};
+  $('ranap').innerHTML=[all].concat(rn).map(function(r,i){
+    var p=pct(r.o,r.t),f=r.t-r.o;
+    return '<div class="rk-i'+(i?'':' main')+'" data-tone="'+tone(p)+'"><div class="rk-h"><span>'+r.n+'</span><b class="n">'+p+'%</b></div>'+
+      '<div class="rk-bar"><u style="width:'+p+'%"></u></div>'+
+      '<div class="rk-f"><span><b>'+r.o+'</b> terisi dari <b>'+r.t+'</b> bed</span><span>Sisa <b>'+f+'</b> ('+(100-p)+'%)</span></div></div>';}).join('');
+
+  /* IBS */
+  var tot=ibs.jadwal+ibs.tiba+ibs.jalan+ibs.selesai;
+  function st(c,l,v,d){return '<div class="stage '+c+'"><span>'+l+'</span><b class="n">'+v+'</b><small>'+d+'</small></div>';}
+  $('ibs-flow').innerHTML=
+    st('s-jadwal','Terjadwal',ibs.jadwal,'Masih di Ruangan')+
+    st('s-tiba','Tiba di IBS',ibs.tiba,'Telah di Instalasi Bedah Sentral')+
+    st('s-jalan','Sedang Berlangsung',ibs.jalan,'Operasi &amp; Pemulihan Sedang Berlangsung')+
+    st('s-selesai','Di Ruang Ranap',ibs.selesai,'Operasi Selesai &amp; Pasien Selesai');
+  function seg(n,c){return n?'<i style="flex:'+n+';background:'+c+'"></i>':'';}
+  $('ibs-prog').innerHTML='<div class="prog-meta"><span>Total operasi hari ini: <b>'+tot+'</b></span><span><b>'+pct(ibs.selesai,tot)+'%</b> sudah kembali ke ranap</span></div>'+
+    '<div class="bar" role="img" aria-label="Terjadwal '+ibs.jadwal+', tiba di IBS '+ibs.tiba+', berlangsung '+ibs.jalan+', di ruang ranap '+ibs.selesai+'">'+
+    seg(ibs.selesai,'#12935f')+seg(ibs.jalan,'#e8a000')+seg(ibs.tiba,'#6d4fe0')+seg(ibs.jadwal,'#2a62d9')+'</div>';
+
+  /* Jam */
+  var hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],bulan=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  function pad(n){return n<10?'0'+n:''+n;}
+  function tick(){var d=new Date();
+    $('time').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    $('date').textContent=hari[d.getDay()]+', '+d.getDate()+' '+bulan[d.getMonth()]+' '+d.getFullYear();}
+  tick();setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
