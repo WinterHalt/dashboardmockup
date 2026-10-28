@@ -94,15 +94,28 @@ a{color:inherit;text-decoration:none}
 .occ i u{display:block;height:100%;background:var(--c);border-radius:3px}
 .occ em{font-style:normal;min-width:38px;color:var(--c)}
 [data-tone=green]{--c:var(--green)}[data-tone=amber]{--c:#d98a00}[data-tone=red]{--c:var(--red)}
-.ranap td:first-child{font-size:12.5px;line-height:1.25;padding-right:4px}
+.ranap td:first-child{font-size:14px;padding-right:4px}
 .ranap td{font-size:14px}
 .ranap th{padding-left:6px}
 
+ .tbl td:first-child{white-space:nowrap}
+.ranap-wrap{margin-bottom:18px}
+.rk{display:flex;flex-direction:column;gap:14px}
+.rk-i{padding:12px 14px;border-radius:14px;background:#f6f8fc}
+.rk-i.main{background:#eef3fb}
+.rk-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:650;font-size:14px}
+.rk-h b{font-size:28px;letter-spacing:-1px;color:var(--c)}
+.rk-bar{height:8px;border-radius:4px;background:#dfe6f1;margin:6px 0 8px;overflow:hidden}
+.rk-bar u{display:block;height:100%;background:var(--c);border-radius:4px}
+.rk-f{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.rk-f b{color:var(--text)}
 .shortcut{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding:12px 14px;border-radius:14px;background:#f2f5fa;font-size:14px;font-weight:600;transition:background .2s}
 .shortcut .ic{font-size:16px;transition:transform .25s}
 .shortcut:hover{background:#e8f0fe}.shortcut:hover .ic{transform:translateX(4px)}
 .shortcut:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .c-bed .tbl{margin-bottom:18px}
+#tbl-igd td{padding:15px 0 15px 8px}
+#tbl-igd td:first-child{padding-left:0}
 
 /* Baris 3: IBS */
 .ibs-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
@@ -141,6 +154,9 @@ a{color:inherit;text-decoration:none}
   <button data-opt="A" aria-pressed="false">A · 3×3 sama rata</button>
   <button data-opt="B" aria-pressed="true">B · 3×2 + baris chip</button>
   <button data-opt="C" aria-pressed="false">C · 3×3, baris 3 solid</button>
+  <span style="margin-left:14px">Ranap:</span>
+  <button data-r="R1" aria-pressed="true">R1 · tabel</button>
+  <button data-r="R2" aria-pressed="false">R2 · kartu + bar</button>
 </div>
 
 <main class="board">
@@ -179,7 +195,7 @@ a{color:inherit;text-decoration:none}
     <!-- Bed Ranap -->
     <section class="card c-bed" aria-label="Ketersediaan bed rawat inap">
       <h2>Ketersediaan Bed Rawat Inap</h2>
-      <table class="tbl ranap" id="tbl-ranap"></table>
+      <div id="ranap" class="ranap-wrap"></div>
       <a class="shortcut" href="#"><span>Ketersediaan Tempat Tidur</span><svg class="ic"><use href="#i-arrow-right"/></svg></a>
     </section>
   </div>
@@ -204,10 +220,6 @@ a{color:inherit;text-decoration:none}
   var level=[{k:'merah',l:'Merah',v:1},{k:'kuning',l:'Kuning',v:1},{k:'hijau',l:'Hijau',v:1}];
   /* IGD: free = bed tersedia (4/4 = semua tersedia) */
   var igd=[{n:'Resusitasi',t:4,f:4},{n:'Obgin',t:6,f:6},{n:'Anak',t:6,f:6},{n:'Medikal',t:12,f:12},{n:'Surgikal',t:12,f:11}];
-  /* Ranap: pembagian kelompok masih sementara */
-  var ranap=[
-    {g:'Intensive (HCU)',rows:[{n:'LAVENDER 10 (HCU ANAK)',t:10,f:0},{n:'LAVENDER 6 (HCU PINERE)',t:4,f:0},{n:'LAVENDER 7 (HCU PARU)',t:3,f:0}]},
-    {g:'Non-intensive',rows:[{n:'EDELWIS (GERIATRI)',t:12,f:0},{n:'ISTANO PAGARUYUANG',t:3,f:0}]}];
   var ibs={jadwal:4,jalan:3,selesai:5};
 
   /* ===== Helper ===== */
@@ -234,25 +246,31 @@ a{color:inherit;text-decoration:none}
   renderTriase('B');
 
   /* ===== Tabel IGD ===== */
-  function occCell(p){return '<div class="occ" data-tone="'+tone(p)+'"><i><u style="width:'+p+'%"></u></i><em>'+p+'%</em></div>';}
-  var T=0,F=0,h='<thead><tr><th>Zona</th><th>Terisi</th><th>Total</th><th>Sisa</th><th>Okupansi</th></tr></thead><tbody>';
-  igd.forEach(function(r){var o=r.t-r.f;T+=r.t;F+=r.f;
-    h+='<tr><td>'+r.n+'</td><td>'+o+'</td><td class="dim">'+r.t+'</td><td>'+r.f+'</td><td>'+occCell(pct(o,r.t))+'</td></tr>';});
-  h+='<tr class="total"><td>Total IGD</td><td>'+(T-F)+'</td><td>'+T+'</td><td>'+F+'</td><td>'+occCell(pct(T-F,T))+'</td></tr></tbody>';
-  document.getElementById('tbl-igd').innerHTML=h;
+  var h='<thead><tr><th>Triase</th><th>Terisi</th><th>Total</th><th>Sisa</th></tr></thead><tbody>';
+  igd.forEach(function(r){h+='<tr><td>'+r.n+'</td><td>'+(r.t-r.f)+'</td><td class="dim">'+r.t+'</td><td>'+r.f+'</td></tr>';});
+  document.getElementById('tbl-igd').innerHTML=h+'</tbody>';
 
-  /* ===== Tabel Ranap ===== */
-  h='<thead><tr><th>Ruangan</th><th>Total</th><th>Terisi</th><th>Sisa</th><th>% Isi</th><th>% Sisa</th></tr></thead><tbody>';
-  function rcell(p,k){return '<td data-tone="'+tone(p)+'" style="color:var(--c)">'+p+'%</td>';}
-  ranap.forEach(function(g){
-    h+='<tr class="grp"><th colspan="6">'+g.g+'</th></tr>';
-    var gt=0,gf=0;
-    g.rows.forEach(function(r){var o=r.t-r.f;gt+=r.t;gf+=r.f;var p=pct(o,r.t);
-      h+='<tr><td>'+r.n+'</td><td class="dim">'+r.t+'</td><td>'+o+'</td><td>'+r.f+'</td>'+rcell(p)+'<td class="dim">'+(100-p)+'%</td></tr>';});
-    var go=gt-gf,gp=pct(go,gt);
-    h+='<tr class="total"><td>Subtotal</td><td>'+gt+'</td><td>'+go+'</td><td>'+gf+'</td>'+rcell(gp)+'<td>'+(100-gp)+'%</td></tr>';
-  });
-  document.getElementById('tbl-ranap').innerHTML=h+'</tbody>';
+  /* ===== Ranap kumulatif (R1 tabel / R2 kartu) ===== */
+  var rn=[{n:'Intensive (HCU)',t:17,o:17},{n:'Biasa',t:15,o:15}];
+  var all={n:'Seluruh Rawat Inap',t:sum(rn,'t'),o:sum(rn,'o')};
+  function cell(p){return '<td data-tone="'+tone(p)+'" style="color:var(--c)">'+p+'%</td>';}
+  function renderRanap(v){
+    var el=document.getElementById('ranap'),x;
+    if(v==='R2'){
+      x='<div class="rk">'+[all].concat(rn).map(function(r,i){var p=pct(r.o,r.t),f=r.t-r.o;
+        return '<div class="rk-i'+(i?'':' main')+'" data-tone="'+tone(p)+'"><div class="rk-h"><span>'+r.n+'</span><b class="num">'+p+'%</b></div>'+
+          '<div class="rk-bar"><u style="width:'+p+'%"></u></div>'+
+          '<div class="rk-f num"><span><b>'+r.o+'</b> terisi dari <b>'+r.t+'</b> bed</span><span>Sisa <b>'+f+'</b> ('+(100-p)+'%)</span></div></div>';}).join('')+'</div>';
+    }else{
+      x='<table class="tbl ranap"><thead><tr><th></th><th>Total</th><th>Terisi</th><th>% Isi</th><th>Sisa</th><th>% Sisa</th></tr></thead><tbody>'+
+        [all].concat(rn).map(function(r,i){var p=pct(r.o,r.t);
+          return '<tr'+(i?'':' class="total"')+'><td>'+r.n+'</td><td class="dim">'+r.t+'</td><td>'+r.o+'</td>'+cell(p)+'<td>'+(r.t-r.o)+'</td><td class="dim">'+(100-p)+'%</td></tr>';}).join('')+'</tbody></table>';
+    }
+    el.innerHTML=x;
+    [].forEach.call(document.querySelectorAll('[data-r]'),function(b){b.setAttribute('aria-pressed',b.dataset.r===v);});
+  }
+  [].forEach.call(document.querySelectorAll('[data-r]'),function(b){b.onclick=function(){renderRanap(b.dataset.r);};});
+  renderRanap('R1');
 
   /* ===== IBS ===== */
   var tot=ibs.jadwal+ibs.jalan+ibs.selesai,ps=pct(ibs.selesai,tot);
